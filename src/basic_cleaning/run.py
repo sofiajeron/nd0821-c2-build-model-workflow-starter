@@ -24,7 +24,7 @@ def go(args):
     df = pd.read_csv(artifact_local_path)
 
     # Drop outliers
-    logger.info("Dropping outliers from the dataset")
+    logger.info("Dropping outliers in price from the dataset")
     min_price = args.min_price
     max_price = args.max_price
     idx = df['price'].between(min_price, max_price)
@@ -33,6 +33,12 @@ def go(args):
     # Convert last_review to datetime
     logger.info("Converting the last_review column to datetime")
     df['last_review'] = pd.to_datetime(df['last_review'])
+
+    #Drop outliers
+    logger.info("Dropping outliers in longitude from the dataset")
+    idx = df['longitude'].between(-74.25, -73.50) & df['latitude'].between(40.5, 41.2)
+    df = df[idx].copy()
+
     logger.info("Saving the dataset")
     df.to_csv("clean_sample.csv", index=False)
 
